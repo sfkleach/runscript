@@ -47,17 +47,23 @@ are header lines. The header ends at the first non‑`#!` line.
 
 ## 3. Header Line Grammar
 
-Each header line has the form:
+Normal header lines have the form:
 
     #!<metachars><whitespace><body>
 
 Where:
 
-- `<metachars>` are zero or more characters from: `=`, `$`, `\`, `!`, `#`
+- `<metachars>` are zero or more characters from: `=`, `$`, `\`, `!`, `#`, which modify the interpretation of <body>.
 - `<whitespace>` is at least 1 space/tab character
 - `<body>` is the remainder of the line after stripping leading and trailing whitespace, of which there are several types
 
-Meta‑characters modify interpretation of `<body>`.
+Short header lines have an abbreviated form:
+
+    #!<metachars>
+
+In other words they lack any trailing whitespace. Because we don't want trailing
+whitespace to be significant, we treat these as having empty bodies. It is
+equivalent to them having a fictitious whitespace character at the end.
 
 ### 3.1 Comment line
 
@@ -92,17 +98,18 @@ There is an exception when the special interpretation of `=` is in force:
 - **THEN** the header line is in error and runscript should exit with a non-zero status code.
 
 
-### 3.3 Empty lines (not discarded!)
+### 3.3 Short header lines
 
-- `#!` on its own is exceptionally interpreted as an ordinary argument that is an empty string.
-- `#!` followed by any meta-character other than `#` means exactly the same.
+- `#!` on its own is exceptionally interpreted as an ordinary argument that is an empty string. Not discarded.
+- `#!` followed by any meta-character other than `#` means exactly the same. Not discarded.
+- `#!` followed by meta-characters that include `#` means a comment. Discarded.
 
 ### 3.4 Examples
 
-`#!=    foo` → body is `foo`
-`#!   =foo` → body is `=foo`
-
-
+- `#!=    foo` → body is `foo`
+- `#!   =foo` → body is `=foo`
+- `#! # this is not a comment` → body is `# this is not a comment`
+- `#!# this is a comment` → discarded
 
 ---
 

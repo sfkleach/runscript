@@ -2,7 +2,10 @@ default:
     @just --list
 
 build:
-    make _build/runscript
+    make _build/runscript _build/test-runscript
+
+clean:
+    make clean
 
 install:
     make install

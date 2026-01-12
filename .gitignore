@@ -2,3 +2,5 @@ _build/l
 
 *.o
 *.out
+/_build/test-runscript
+/.jj/
